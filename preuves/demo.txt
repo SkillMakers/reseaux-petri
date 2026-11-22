@@ -1,0 +1,186 @@
+
+==============================================================================
+COURS 1 - franchir une transition : le producteur et son stock de 2 places
+==============================================================================
+M0 = (pret, libres=2) | franchissables : ['fabriquer']
+  (pret, libres=2)             franchissables : ['fabriquer']  -> on franchit fabriquer
+  (fini, libres=2)             franchissables : ['deposer']  -> on franchit deposer
+  (pret, stock, libres)        franchissables : ['fabriquer', 'retirer']  -> on franchit fabriquer
+  (fini, stock, libres)        franchissables : ['deposer', 'retirer']  -> on franchit deposer
+  (pret, stock=2)              franchissables : ['fabriquer', 'retirer']
+  deposer est-il franchissable a la fin ? False (stock plein, libres = 0)
+
+==============================================================================
+COURS 2 - poids sur un arc : assembler un velo (2 roues + 1 cadre)
+==============================================================================
+  M0 = (roues=5, cadres=3)          | assembler -> M1
+  M1 = (roues=3, cadres=2, velos)   | assembler -> M2
+  M2 = (roues, cadres, velos=2)     | AUCUNE TRANSITION (blocage)
+  marquages atteignables : 3
+  bornes par place : roues <= 5, cadres <= 3, velos <= 2
+  borne : 5 | sauf (1-borne) : False
+  blocages : M2 = (roues, cadres, velos=2)
+  quasi-vivant (chaque transition franchie au moins une fois) : True
+  vivant (chaque transition reste franchissable depuis tout marquage) : False
+    depuis M2, plus jamais : assembler
+  reinitialisable (M0 atteignable depuis tout marquage) : False
+
+==============================================================================
+COURS 3 - graphe de marquage du producteur
+==============================================================================
+  M0 = (pret, libres=2)             | fabriquer -> M1
+  M1 = (fini, libres=2)             | deposer -> M2
+  M2 = (pret, stock, libres)        | fabriquer -> M3, retirer -> M0
+  M3 = (fini, stock, libres)        | deposer -> M4, retirer -> M1
+  M4 = (pret, stock=2)              | fabriquer -> M5, retirer -> M2
+  M5 = (fini, stock=2)              | retirer -> M3
+  marquages atteignables : 6
+  bornes par place : pret <= 1, fini <= 1, stock <= 2, libres <= 2
+  borne : 2 | sauf (1-borne) : False
+  blocages : aucun
+  quasi-vivant (chaque transition franchie au moins une fois) : True
+  vivant (chaque transition reste franchissable depuis tout marquage) : True
+  reinitialisable (M0 atteignable depuis tout marquage) : True
+
+==============================================================================
+COURS 4 - sans limite de stock : le graphe de marquage est infini
+==============================================================================
+  graphe de marquage arrete a 1000 marquages, complet : False
+  stock maximum vu : 499
+  graphe de couverture (Karp et Miller), w = autant qu'on veut :
+    N0 = (pret)               | fabriquer -> N1
+    N1 = (fini)               | deposer -> N2
+    N2 = (pret, stock=w)      | fabriquer -> N3, retirer -> N2
+    N3 = (fini, stock=w)      | deposer -> N2, retirer -> N3
+
+==============================================================================
+COURS 5 - matrice d'incidence et equation d'etat du producteur
+==============================================================================
+Pre      fabriquer    deposer    retirer
+pret             1          0          0
+fini             0          1          0
+stock            0          0          1
+libres           0          1          0
+Post     fabriquer    deposer    retirer
+pret             0          1          0
+fini             1          0          0
+stock            0          1          0
+libres           0          0          1
+C        fabriquer    deposer    retirer
+pret            -1         +1          0
+fini            +1         -1          0
+stock            0         +1         -1
+libres           0         -1         +1
+  sequence fabriquer deposer fabriquer deposer retirer : vecteur de comptage (2, 2, 1)
+  M0 + C.s = (pret, stock, libres) | en franchissant : (pret, stock, libres)
+  P-invariant : pret + fini = 1
+  P-invariant : stock + libres = 2
+  T-invariant : fabriquer + deposer + retirer
+
+==============================================================================
+COURS 6 - le piege de l'equation d'etat : la porte et la cle
+==============================================================================
+Pre       ouvrir
+attente        1
+cle            1
+entre          0
+Post      ouvrir
+attente        0
+cle            1
+entre          1
+C         ouvrir
+attente       -1
+cle            0
+entre         +1
+  boucles (invisibles dans C) : [('cle', 'ouvrir')]
+  M0 = (attente), cible = (entre)
+  solutions de cible = M0 + C.s : [(1,)]
+  marquages vraiment atteignables : ['(attente)'] | ouvrir franchissable : []
+
+==============================================================================
+EXERCICE - question 1 : matrice d'incidence
+==============================================================================
+C    t1  t2  t3  t4  t5  t6
+A0   -1   0  +1   0   0   0
+A1   +1  -1   0   0   0   0
+A2    0  +1  -1   0   0   0
+B0    0   0   0  -1   0  +1
+B1    0   0   0  +1  -1   0
+B2    0   0   0   0  +1  -1
+R1   -1   0  +1   0  -1  +1
+R2    0  -1  +1  -1   0  +1
+
+==============================================================================
+EXERCICE - question 2 : graphe de marquage
+==============================================================================
+  M0 = (A0, B0, R1, R2)             | t1 -> M1, t4 -> M2
+  M1 = (A1, B0, R2)                 | t2 -> M3, t4 -> M4
+  M2 = (A0, B1, R1)                 | t1 -> M4, t5 -> M5
+  M3 = (A2, B0)                     | t3 -> M0
+  M4 = (A1, B1)                     | AUCUNE TRANSITION (blocage)
+  M5 = (A0, B2)                     | t6 -> M0
+
+==============================================================================
+EXERCICE - question 3 : proprietes
+==============================================================================
+  marquages atteignables : 6
+  bornes par place : A0 <= 1, A1 <= 1, A2 <= 1, B0 <= 1, B1 <= 1, B2 <= 1, R1 <= 1, R2 <= 1
+  borne : 1 | sauf (1-borne) : True
+  blocages : M4 = (A1, B1)
+  quasi-vivant (chaque transition franchie au moins une fois) : True
+  vivant (chaque transition reste franchissable depuis tout marquage) : False
+    depuis M4, plus jamais : t1, t2, t3, t4, t5, t6
+  reinitialisable (M0 atteignable depuis tout marquage) : False
+  transitions qui apparaissent dans le graphe : ['t1', 't2', 't3', 't4', 't5', 't6'] (6 sur 6)
+
+==============================================================================
+EXERCICE - question 4 : invariants de places
+==============================================================================
+  P-invariant : A0 + A1 + A2 = 1
+  P-invariant : A1 + A2 + B2 + R1 = 1
+  P-invariant : A2 + B1 + B2 + R2 = 1
+  P-invariant : B0 + B1 + B2 = 1
+  T-invariant : t1 + t2 + t3
+  T-invariant : t4 + t5 + t6
+  marquages ou A2 et B2 sont marques ensemble : aucun
+
+==============================================================================
+EXERCICE - question 5 : B prend R1 avant R2, comme A
+==============================================================================
+  M0 = (A0, B0, R1, R2)             | t1 -> M1, t4 -> M2
+  M1 = (A1, B0, R2)                 | t2 -> M3
+  M2 = (A0, B1, R2)                 | t5 -> M4
+  M3 = (A2, B0)                     | t3 -> M0
+  M4 = (A0, B2)                     | t6 -> M0
+  marquages atteignables : 5
+  bornes par place : A0 <= 1, A1 <= 1, A2 <= 1, B0 <= 1, B1 <= 1, B2 <= 1, R1 <= 1, R2 <= 1
+  borne : 1 | sauf (1-borne) : True
+  blocages : aucun
+  quasi-vivant (chaque transition franchie au moins une fois) : True
+  vivant (chaque transition reste franchissable depuis tout marquage) : True
+  reinitialisable (M0 atteignable depuis tout marquage) : True
+  P-invariant : A0 + A1 + A2 = 1
+  P-invariant : A1 + A2 + B1 + B2 + R1 = 1
+  P-invariant : A2 + B2 + R2 = 1
+  P-invariant : B0 + B1 + B2 = 1
+  T-invariant : t1 + t2 + t3
+  T-invariant : t4 + t5 + t6
+
+==============================================================================
+POUR ALLER PLUS LOIN - n programmes autour d'une table (philosophes)
+==============================================================================
+   n | ordre            | marquages | blocages | vivant | temps
+   2 | chacun sa gauche |         6 |        1 | False  | 0.00 s
+   2 | meme ordre       |         5 |        0 | True   | 0.00 s
+   3 | chacun sa gauche |        14 |        1 | False  | 0.00 s
+   3 | meme ordre       |        12 |        0 | True   | 0.00 s
+   4 | chacun sa gauche |        34 |        1 | False  | 0.00 s
+   4 | meme ordre       |        29 |        0 | True   | 0.00 s
+   5 | chacun sa gauche |        82 |        1 | False  | 0.01 s
+   5 | meme ordre       |        70 |        0 | True   | 0.01 s
+   6 | chacun sa gauche |       198 |        1 | False  | 0.05 s
+   6 | meme ordre       |       169 |        0 | True   | 0.04 s
+   7 | chacun sa gauche |       478 |        1 | False  | 0.23 s
+   7 | meme ordre       |       408 |        0 | True   | 0.17 s
+   8 | chacun sa gauche |      1154 |        1 | False  | 1.04 s
+   8 | meme ordre       |       985 |        0 | True   | 0.81 s

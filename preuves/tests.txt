@@ -1,0 +1,35 @@
+test_couverture_contre_marquage (test_petri.Algorithmes.test_couverture_contre_marquage)
+Reseau borne : le graphe de couverture n'a aucun omega et donne les memes marquages. Un omega ... ok
+test_equation_etat_sur_chaque_chemin (test_petri.Algorithmes.test_equation_etat_sur_chaque_chemin)
+Tout marquage atteint par une suite s verifie M = M0 + C.s (la reciproque est fausse : la porte). ... ok
+test_p_invariants (test_petri.Algorithmes.test_p_invariants)
+f.C = 0, f >= 0, f.M constant sur tout le graphe ; supports minimaux (aucun n'en contient un autre) ; ... ok
+test_t_invariants (test_petri.Algorithmes.test_t_invariants)
+C.x = 0, x >= 0 ; supports minimaux ; et complets contre une recherche exhaustive. ... ok
+test_vivant_contre_la_definition (test_petri.Algorithmes.test_vivant_contre_la_definition)
+Juge : pour chaque marquage atteignable M et chaque transition t, on cherche par un nouveau parcours ... ok
+test_correction (test_petri.ChiffresDeLaVideo.test_correction) ... ok
+test_equation_etat_du_producteur (test_petri.ChiffresDeLaVideo.test_equation_etat_du_producteur) ... ok
+test_exclusion_mutuelle (test_petri.ChiffresDeLaVideo.test_exclusion_mutuelle) ... ok
+test_exercice (test_petri.ChiffresDeLaVideo.test_exercice) ... ok
+test_philosophes (test_petri.ChiffresDeLaVideo.test_philosophes) ... ok
+test_piege_de_la_porte (test_petri.ChiffresDeLaVideo.test_piege_de_la_porte) ... ok
+test_producteur (test_petri.ChiffresDeLaVideo.test_producteur) ... ok
+test_sans_limite_omega (test_petri.ChiffresDeLaVideo.test_sans_limite_omega) ... ok
+test_stock_plein_bloque_deposer (test_petri.ChiffresDeLaVideo.test_stock_plein_bloque_deposer) ... ok
+test_velo (test_petri.ChiffresDeLaVideo.test_velo) ... ok
+test_franchir_refuse_une_transition_non_franchissable (test_petri.Erreurs.test_franchir_refuse_une_transition_non_franchissable) ... ok
+test_reseau_et_marquage_invalides (test_petri.Erreurs.test_reseau_et_marquage_invalides) ... ok
+test_sigma_de_mauvaise_longueur (test_petri.Erreurs.test_sigma_de_mauvaise_longueur) ... ok
+test_table_alignee (test_petri.Erreurs.test_table_alignee) ... ok
+test_transition_inconnue (test_petri.Erreurs.test_transition_inconnue) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 10.268s
+
+OK
+Python 3.15.1
+Ran 20 tests in 13.247s
+
+OK
+Python 3.11.9
