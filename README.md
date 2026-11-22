@@ -1,7 +1,7 @@
 # Réseaux de Petri : cours et exercices corrigés
 
-Code de la vidéo **Réseaux de Petri : cours et exercices corrigés** de la chaîne
-[IT Skills Maker](https://www.youtube.com/@ItSkillsMaker) (lien ajouté à la publication).
+Code de la vidéo [**Réseaux de Petri : cours et exercices corrigés (graphe de marquage)**](https://youtu.be/rhRuo28aUmY) de la chaîne
+[IT Skills Maker](https://www.youtube.com/@ItSkillsMaker).
 
 Le programme refait le corrigé **comme sur une copie** : franchissement, graphe de marquage (marquages numérotés dans
 l'ordre où on les trouve), propriétés (borné, sauf, blocage, quasi-vivant, vivant, réinitialisable), graphe de
